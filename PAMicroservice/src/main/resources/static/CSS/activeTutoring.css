@@ -1,0 +1,49 @@
+*{
+    padding: 0;
+    margin: 0;
+}
+
+body{
+    background: white;
+}
+
+.wrapper {
+    width: 100%;
+}
+
+.wrapper h2 {
+    padding: 30px 30px 0px;
+    font-family: Arial;
+    font-size: 50px;
+    color: #111;
+    line-height: 44px;
+}
+
+.wrapper #confirmButton {
+    float: left;
+}
+
+.wrapper #cancelButton {
+    float: left;
+    background-color: red;
+    margin: 0px 15px;
+}
+
+.wrapper ul {
+    display: block;  /* Remove bullet points; allow greater control of positioning */
+    padding: 10px 0px 0px;
+    margin-left: 0px;       /* Override defaults for lists */
+    width: 100%;     /* Get the row full width */
+}
+
+.wrapper li {
+    font-family: Arial;
+    padding: 10px 10px 10px;
+    display: inline-block; /* Get all images to show in a row */
+    width: 100%;
+}
+
+.list-group-item {
+    display: flex; /*mette tutti gli elementi in linea*/
+    justify-content: space-between; /*mette uno spazio tra due elementi*/
+}

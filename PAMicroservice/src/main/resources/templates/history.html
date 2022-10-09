@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Private Lessons</title>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="//cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+          crossorigin="anonymous">
+    <script type="text/javascript" src="/javascripts/history.js"></script>
+</head>
+<body>
+<div id="history">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" th:href="@{/index}">Private Lessons</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item" v-if="guest">
+                        <a class="nav-link active" aria-current="page" th:href="@{/login}">Login</a>
+                    </li>
+                    <li class="nav-item" v-if="guest">
+                        <a class="nav-link active" aria-current="page" th:href="@{/register}">Register</a>
+                    </li>
+
+                    <li class="nav-item" v-if="student || admin">
+                        <a class="nav-link active" aria-current="page" th:href="@{/book}">Book</a>
+                    </li>
+                    <li class="nav-item" v-if="student || admin">
+                        <a class="nav-link active" aria-current="page" th:href="@{/activeTutorings}">Active Tutorings</a>
+                    </li>
+                    <li class="nav-item" v-if="student || admin">
+                        <a class="nav-link active" aria-current="page">History</a>
+                    </li>
+                    <li class="nav-item" align="right" v-if="student || admin">
+                        <a class="nav-link active" aria-current="page" th:href="@{/logout}">Logout</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <br /><br />
+    <div class="container">
+        <div class="row">
+            <div v-if="admin">
+                <span>Restrict your search: </span><select id="restrictionSelected" class="form-select form-select-lg mb-3" aria-label=".form-select-lg example">
+                <option selected>All bookings</option>
+                <option>Active bookings</option>
+                <option>Confirmed bookings</option>
+                <option >Deleted bookings</option>
+            </select>
+
+                <table id="tableAdmin" class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th>Subject</th>
+                        <th>Teacher</th>
+                        <th>Student</th>
+                        <th>Date</th>
+                        <th>Hour</th>
+                        <th>State</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr v-for="history in histories">
+                        <td>{{ history.subject }}</td>
+                        <td>{{ history.teacher }}</td>
+                        <td>{{ history.student }}</td>
+                        <td>{{ history.date }}</td>
+                        <td>{{ history.hour }}</td>
+                        <td v-if="history.status === 0"> On going</td>
+                        <td v-if="history.status === 1"> Confirmed</td>
+                        <td v-if="history.status === 2"> Deleted</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div v-if="student">
+                <table id="tableStudent" class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th>Subject</th>
+                        <th>Teacher</th>
+                        <th>Date</th>
+                        <th>Hour</th>
+                        <th>State</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr v-for="history in histories">
+                        <td>{{ history.subject }}</td>
+                        <td>{{ history.teacher }}</td>
+                        <td>{{ history.date }}</td>
+                        <td>{{ history.hour }}</td>
+                        <td v-if="history.status === 0"> On going</td>
+                        <td v-if="history.status === 1"> Confirmed</td>
+                        <td v-if="history.status === 2"> Deleted</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

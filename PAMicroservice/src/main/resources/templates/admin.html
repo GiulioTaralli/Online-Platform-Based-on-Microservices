@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Private Lessons</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="//stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <script src="//cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+          crossorigin="anonymous">
+
+    <script type="text/javascript" src="/javascripts/admin.js"></script>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand" th:href="@{/index}">Private Lessons</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item" v-if="guest">
+                    <a class="nav-link active" aria-current="page" th:href="@{/login}">Login</a>
+                </li>
+                <li class="nav-item" v-if="guest">
+                    <a class="nav-link active" aria-current="page" th:href="@{/register}">Register</a>
+                </li>
+
+                <li class="nav-item" v-if="student || admin">
+                    <a class="nav-link active" aria-current="page" th:href="@{/book}">Book</a>
+                </li>
+                <li class="nav-item" v-if="student || admin">
+                    <a class="nav-link active" aria-current="page" th:href="@{/activeTutorings}">Active Tutorings</a>
+                </li>
+                <li class="nav-item" v-if="student || admin">
+                    <a class="nav-link active" aria-current="page" th:href="@{/history}">History</a>
+                </li>
+                <li class="nav-item" v-if="admin">
+                    <a class="nav-link active" aria-current="page">Admin</a>
+                </li>
+                <li class="nav-item" align="right" v-if="student || admin">
+                    <a class="nav-link active" aria-current="page" th:href="@{/logout}">Logout</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<br /><br />
+<div id="admin">
+    <div class="container" id="accordion">
+        <!--<div class="row col-md-10">
+            <h2>List of Registered Users</h2>
+        </div>
+        <table class="table table-bordered table-hover">
+            <thead class="table-dark">
+            <tr>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Email</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each = "user : ${users}">
+                <td th:text = "${user.firstName}"></td>
+                <td th:text = "${user.lastName}"></td>
+                <td th:text = "${user.email}"></td>
+            </tr>
+            </tbody>
+        </table>-->
+
+        <h2>Admin page</h2>
+        <div class="card" id="styleFirstOne">
+            <div class="card-header" id="headingOne">
+                <h5 class="mb-0">
+                    <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                        Add a teacher in the system
+                    </button>
+                </h5>
+            </div>
+
+            <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
+                <div class="card-body">
+
+                    <!-- INPUT TEACHER'S DATA -->
+                    <div class="form-group">
+                        <label>Name</label>
+                        <input type="text" class="form-control" id="formInputFirstName" placeholder="Teacher's name">
+                    </div>
+                    <div class="form-group">
+                        <label>Surname</label>
+                        <input type="text" class="form-control" id="formInputLastName" placeholder="Teacher's surname">
+                    </div>
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" class="form-control" id="formInputEmail" placeholder="Teacher's email">
+                    </div>
+                    <button id="sendTeacherData" class="btn btn-primary">Insert the teacher</button>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header" id="headingTwo">
+                <h5 class="mb-0">
+                    <button id="sectionDeleteTeacher" class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                        Delete a teacher from the system
+                    </button>
+                </h5>
+            </div>
+            <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
+                <div class="card-body">
+                    <!-- TEACHERS LIST -->
+                    <select id="subjectSelected2" class="form-select form-select-lg mb-3" aria-label=".form-select-lg example">
+                        <option selected>Restrict by subjects</option>
+                        <option>All</option>
+                        <option v-for="subject in subjects">{{subject}}</option>
+                    </select>
+                    <ul id="listTeachers" class="list-group">
+                        <li v-for="teacher in teachers" class="list-group-item">{{teacher}}
+                            <button id="confirmDeleteButton" class="btn btn-primary" type="button" style="float: right"> Delete </button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header" id="headingThree">
+                <h5 class="mb-0">
+                    <button id="sectionInsertAssociation" class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                        Add a Course-Teacher association in the system
+                    </button>
+                </h5>
+            </div>
+            <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
+                <div class="card-body">
+                    <!-- SELECT INSERT ASSOCIATION TEACHER-COURSE -->
+                    <select id="teacherSelected3" class="form-select form-select-lg mb-3" aria-label=".form-select-lg example">
+                        <option selected>Select a teacher</option>
+                        <option v-for="teacher in teachers"> {{teacher}} </option>
+                    </select>
+
+                    <select id="subjectSelected3" class="form-select form-select-lg mb-3" aria-label=".form-select-lg example">
+                        <option selected>Select a subject</option>
+                        <option v-for="subject in subjects"> {{subject}} </option>
+                    </select>
+                    <button id="confirmAssociationButton" class="btn btn-primary" type="button" style="float: right"> Confirm association </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header" id="headingFour">
+                <h5 class="mb-0">
+                    <button id="sectionDeleteAssociation" class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+                        Delete a Course-Teacher association from the system
+                    </button>
+                </h5>
+            </div>
+            <div id="collapseFour" class="collapse" aria-labelledby="headingFour" data-parent="#accordion">
+                <div class="card-body">
+                    <!-- DELETE ASSOCIATION TEACHER-COURSE -->
+                    <p>Select a subject (necessary)</p>
+                    <select id="subjectSelected4" class="form-select form-select-lg mb-3" aria-label=".form-select-lg example">
+                        <option selected>Select a subject</option>
+                        <option v-for="subject in subjects"> {{subject}} </option>
+                    </select>
+                    <ul id="listAssociatedTeachers" class="list-group">
+                        <li v-for="teacher in teachers" class="list-group-item">{{teacher}}
+                            <button id="confirmDeleteAssociation" class="btn btn-primary" type="button" style="float: right"> Delete </button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header" id="headingFive">
+                <h5 class="mb-0">
+                    <button id="sectionInsertCourse" class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
+                        Add a course in the system
+                    </button>
+                </h5>
+            </div>
+            <div id="collapseFive" class="collapse" aria-labelledby="headingFive" data-parent="#accordion">
+                <div class="card-body">
+                    <form>
+                        <div class="form-group">
+                            <label>Subject's name</label>
+                            <input type="text" class="form-control" id="formInputCourse" placeholder="Subject's name">
+                        </div>
+                        <button id="sendCourse" class="btn btn-primary">Insert the course</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header" id="headingSix">
+                <h5 class="mb-0">
+                    <button id="sectionDeleteCourse" class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseSix" aria-expanded="false" aria-controls="collapseSix">
+                        Delete a course from the system
+                    </button>
+                </h5>
+            </div>
+            <div id="collapseSix" class="collapse" aria-labelledby="headingSix" data-parent="#accordion">
+                <div class="card-body">
+                    <ul id="listCourse" class="list-group">
+                        <li v-for="subject in subjects" class="list-group-item">{{subject}}
+                            <button id="confirmDeleteCourse" class="btn btn-primary" type="button" style="float: right"> Delete </button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

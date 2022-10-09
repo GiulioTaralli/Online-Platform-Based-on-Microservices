@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Private Lessons</title>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="//cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+          crossorigin="anonymous">
+    <script type="text/javascript" src="/javascripts/activeTutoring.js"></script>
+    <link rel="stylesheet" href="CSS/activeTutoring.css">
+</head>
+<body>
+<div id="activeTutoring">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" th:href="@{/index}">Private Lessons</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item" v-if="guest">
+                        <a class="nav-link active" aria-current="page" th:href="@{/login}">Login</a>
+                    </li>
+                    <li class="nav-item" v-if="guest">
+                        <a class="nav-link active" aria-current="page" th:href="@{/register}">Register</a>
+                    </li>
+
+                    <li class="nav-item" v-if="student || admin">
+                        <a class="nav-link active" aria-current="page" th:href="@{/book}">Book</a>
+                    </li>
+                    <li class="nav-item" v-if="student || admin">
+                        <a class="nav-link active" aria-current="page">Active Tutorings</a>
+                    </li>
+                    <li class="nav-item" v-if="student || admin">
+                        <a class="nav-link active" aria-current="page" th:href="@{/history}">History</a>
+                    </li>
+                    <li class="nav-item" align="right" v-if="student || admin">
+                        <a class="nav-link active" aria-current="page" th:href="@{/logout}">Logout</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <br /><br />
+    <div class="container">
+        <div class="row">
+            <h2>Active Tutoring</h2>
+            <ul class="list-group">
+                <li v-if="student" v-for="tutoring in tutorings" class="list-group-item">
+                    {{tutoring.subject}}, {{tutoring.teacher}}, {{tutoring.date}}, {{tutoring.hour}}
+                    <div>
+                        <button id="confirmButton" class="btn btn-primary" type="button"> Confirm </button>
+                        <button id="cancelButton" class="btn btn-primary" type="button"> Cancel </button>
+                    </div>
+                </li>
+                <li v-if="admin" v-for="tutoring in tutorings" class="list-group-item">{{tutoring.subject}}, {{tutoring.teacher}}, {{tutoring.date}}, {{tutoring.hour}}, {{tutoring.student}}
+                    <button id="cancelButtonAdmin" class="btn btn-danger" type="button" style="float: right"> Cancel booking </button>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+</body>
+</html>
