@@ -1,5 +1,5 @@
 # tesi_microservices_ripetizioni
-tesi triennale
+Tesi triennale
 
 requisiti del progetto: https://github.com/GiulioTaralli/Web-application-for-a-tutoring-service
 
